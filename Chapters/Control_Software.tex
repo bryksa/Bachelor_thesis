@@ -20,7 +20,7 @@ The architecture of the application is based on Model-View-Controller (MVC) arch
 
 \begin{figure}[ht]\centering
 \includegraphics[width=0.7\linewidth]{Data/Control_Software/MVC_general.png}
-\caption{Model, View and Controller (MVC) relative to user.}
+\caption{Model, View and Controller (MVC) relative to user (classic interaction).}
 \label{fig:mvc_general}
 \end{figure}
 
@@ -28,11 +28,11 @@ Shown in the Figure \ref{fig:mvc_general} interaction is a classical MVC archite
 
 \begin{figure}[ht]\centering
 \includegraphics[width=0.7\linewidth]{Data/Control_Software/MVC_custom.png}
-\caption{Model, View and Controller (MVC) relative to user.}
+\caption{Model, View and Controller (MVC) relative to user (interaction in the PSAuto).}
 \label{fig:mvc_custom}
 \end{figure}
 
-Comparing to classical MVC structure from Figure \ref{fig:mvc_general}, the Model do not directly inform/update the View. This information passes through Controller. A controller object acts as the intermediary between the Model and the View. Controllers are often in charge of making sure the views have access to the model objects they need to display and act as the conduit through which views learn about changes to the model. Controller objects can also perform set-up and coordinating tasks for an application and manage the life cycles of other objects \cite{apple_MVC}.
+Comparing to classical MVC structure from Figure \ref{fig:mvc_general}, the Model do not directly inform/update the View. This information passes through Controller. A controller object acts as the intermediary between the Model and the View. Controller is often in charge of making sure the Views have access to the Model objects they need to display and act as the conduit through which views learn about changes to the Model. Controller objects can also perform set-up and coordinating tasks for an application and manage the life cycles of other objects \cite{apple_MVC}.
 
 Depending on the application logic and demands, Model, View and Controller follow special properties and rules.
 
@@ -70,15 +70,7 @@ The application of the OpenCV libraries will be described more detailed in the n
 
 Pattern recognition is a crucial part of the whole automated assembly system, in particular -- vision subsystem. It provides the software with the information where all the components of the modules are situated in the space and theirs orientation. Within this information the software is able to calculate where to move each component of an assembling module \cite{AutomatedAssembly_tutorial}.
 
-An important task performed by PSAuto is the determination the \emph{location} and \emph{planar orientation}. By definition, planar orientation is the rotational orientation of the sensor in the horizontal (X-Y) plane of the sensors during the assembly process. This is generally achieved in two basic steps: the independent determination of \emph{localised} positions and orientations of the four markers at the corners of the sensor and a global fit to these positions from which the final position and orientation of the entire sensor is extracted \cite{AutomatedAssembly_tutorial}. 
-
-\begin{figure}[ht]\centering
-\includegraphics[width=0.7\linewidth]{Data/Control_Software/Fiducial_marker.png}
-\caption{Fiducial marker on one of the corner of a PS sensor.}
-\label{fig:fiducial_marker}
-\end{figure}
-
-This is done by processing the images of \emph{fiducial markers} at the corners of the sensors (Figure \ref{fig:fiducial_marker}) acquired by the vision system with a Pattern Recognition algorithm. The markers are precisely positioned with respect to the strips or pixels or the sensors. Hence precise alignment of the markers ensures precise alignment of the pixels or strips.The algorithm takes raw images as input and returns the position and orientation of fiducial markers located at the corners of the PS sensors. The pattern recognition algorithm utilises the \emph{OpenCV} package. The steps comprising the pattern recognition are now outined:
+An important task performed by PSAuto is the determination the \emph{location} and \emph{planar orientation}. By definition, planar orientation is the rotational orientation of the sensor in the horizontal (X-Y) plane of the sensors during the assembly process. For automated assembly system planar orientation is performed in two basic steps: the independent determination of \emph{localised} positions and orientations of the four markers at the corners of the sensor and a global fit to these positions from which the final position and orientation of the entire sensor is extracted. This is done by processing the images of \emph{fiducial markers} at the corners of the sensors (Figure \ref{fig:fiducial_marker}) acquired by the vision system with a Pattern Recognition algorithm. The markers are precisely positioned with respect to the strips or pixels of the sensors. Hence precise alignment of the markers ensures precise alignment of the pixels or strips. The algorithm takes raw images as input and returns the position and orientation of fiducial markers located at the corners of the PS sensors. The pattern recognition algorithm utilises the \emph{OpenCV} package. The steps comprising the pattern recognition are now outined:
 
 \begin{enumerate}
 \setlength\itemsep{-0.5em}
@@ -87,17 +79,23 @@ This is done by processing the images of \emph{fiducial markers} at the corners 
 \item Location of other corners and extraction of final position and orientation.
 \end{enumerate}
 
+\begin{figure}[ht]\centering
+\includegraphics[width=0.7\linewidth]{Data/Control_Software/Fiducial_marker.png}
+\caption{Fiducial marker on one of the corner of a PS module's sensor.}
+\label{fig:fiducial_marker}
+\end{figure}
+
 \subsection{Pre-processing of raw image}
-The raw images from the camera are first converted from colour to black and white which is known as \emph{grayscaling} in OpenCV. The pixels comprising the grayscaled image contain intensity information only in the form of a single number ranging from 0 to 255 describing the darkness of a shade of gray as opposed to the intensity and colour information contained in the pixels of a colour image. As the corner markers are based on simple shapes and not colours, the colour information is not helpful and is thus disregarded. The grayscaled image is then converted to a \emph{binary} image in which each pixel is either black or white in a process known as \emph{thresholding}. Thresholding simply converts each pixel of the image into a white(black) pixel if the intensity of the pixel is above(below) a pre-defined threshold (). Thresholding serves to reduce the differences between images of identical sensors due to random \emph{noise} arising from dust and random differences in the surfaces of the patterned sensors. Examples of grayscaled and thresholded images of the same corner marker of a dummy PS sensor is shown in Figure \ref{fig:threshold}. The optimal threshold will depend on the ambient lighting conditions around the assembly area and and the contrast of the fiducial markings on the sensors. Currently, typical values of threshold are around 90.
+The raw images from the camera are first converted from colour to black and white which is known as \emph{grayscaling} in OpenCV. The pixels comprising the grayscaled image contain intensity information only in the form of a single number ranging from 0 to 255 describing the darkness of a shade of gray as opposed to the intensity and colour information contained in the pixels of a colour image. As the corner markers are based on simple shapes and not colours, the colour information is not helpful and is thus disregarded. The grayscaled image is then converted to a \emph{binary} image in which each pixel is either black or white in a process known as \emph{thresholding}. Thresholding simply converts each pixel of the image into a white(black) pixel if the intensity of the pixel is above(below) a pre-defined threshold. Thresholding serves to reduce the differences between images of identical sensors due to random \emph{noise} arising from dust and random differences in the surfaces of the patterned sensors. Examples of grayscaled and thresholded images of the same corner marker of a dummy PS sensor is shown in Figure \ref{fig:threshold}. The optimal threshold will depend on the ambient lighting conditions around the assembly area and the contrast of the fiducial markings on the sensors. Currently, typical values of threshold are around 90.
 
 \begin{figure}[ht]\centering
 \includegraphics[width=0.9\linewidth]{Data/Control_Software/Threshold.png}
-\caption{Threshold application on fiducial marker of dummy PS module.}
+\caption{Threshold application on fiducial marker of dummy PS module's sensor.}
 \label{fig:threshold}
 \end{figure}
 
 \subsection{Determination of positions and planar orientations of fiducial markers.}
-The position and orientation of the fiducial marker within the thresholded image is determined using a standard image processing technique known as \emph{template matching}. In template matching, parts of an master image that closely resemble a template image are located. In this case, the master image corresponds to the thresholded image of the fiducial marker and the template image corresponds to a thresholded image of a fiducial marker.
+The position and orientation of the fiducial marker within the thresholded image is determined using a standard image processing technique known as \emph{template matching}. OpenCV provides the function of the same name for such kind of tasks. In template matching, parts of an master image that closely resemble a template image are located. In this case, the master image corresponds to the thresholded image of the fiducial marker and the template image corresponds to a thresholded image of a fiducial marker.
 
 Template matching proceeds by iteratively superimposing the template image at each point of the master image and calculating a metric which describes the similarity of the template image and the portion of the master image with which it coincides. The OpenCV package provides multiple options for the metric. Similar results are observed for each possible metric with the chosen metric based on the normalised squared difference between the intensities of coincident pixels of the master image and superimposed template:
 
@@ -115,7 +113,7 @@ This metric is referred to as CV\_TM\_SQDIFF\_NORMED in OpenCV. The point in the
 \label{fig:template_matching}
 \end{figure}
 
-In order to deduce the orientation of the marker in the plane transverse to the optical axis of the camera, the matching procedure is repeated iteratively with different rotational transformations applied to the master image. For each iteration, the minimal value of the metric is recorded with the minimal metric value across all iterations denoted as $\alpha$. The planar orientation of the sensor is estimated as $-\alpha$. In Figure \ref{fig:template_rotation} a schematic illustrating the determination of the orientation is shown. A graph of the resultant minimised metric values versus the size of the angular transformation applied to the master image is shown on the right image of the Figure \ref{fig:template_rotation}. The graph corresponds to a test extraction performed with images of a dummy sensor where the sensor in the master image had a planar orientation of $\approx$ 3.5 degrees. A clear minimum is observed at $\approx$ 3.5 demonstrating the method's validity. More precise determination of the sensor orientation can be achieved when factors such as ambient light conditions, image focus and marker design are further optimised. The best accuracy reached during tests was $\approx$ 0.025 degrees.
+In order to deduce the orientation of the marker in the plane transverse to the optical axis of the camera, the matching procedure is repeated iteratively with different rotational transformations applied to the master image. Rotational angle denotes as $\alpha$ and goes through some predefined range with some step fot each iteration. At the same time in each iteration, the minimal value of the metric is recorded with the minimal metric value across all iterations. The planar orientation of the sensor is estimated as $-\alpha$. In Figure \ref{fig:template_rotation} a schematic illustrating the determination of the orientation is shown. A graph of the resultant minimised metric values versus the size of the angular transformation applied to the master image is shown on the right image of the Figure \ref{fig:template_rotation}. The graph corresponds to a test extraction performed with images of a dummy sensor where the sensor in the master image had a planar orientation of $\approx$ 3.5 degrees. A clear minimum is observed at $\approx$ 3.5 demonstrating the method's validity. More precise determination of the sensor orientation can be achieved when factors such as ambient light conditions, image focus and marker design are further optimised. The best accuracy reached during tests was $\approx$ 0.025 degrees.
 
 \begin{figure}[ht]\centering
 \includegraphics[width=0.9\linewidth]{Data/Control_Software/Template_rotation.png}
