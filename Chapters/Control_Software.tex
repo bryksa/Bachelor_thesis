@@ -113,7 +113,7 @@ This metric is referred to as CV\_TM\_SQDIFF\_NORMED in OpenCV. The point in the
 \label{fig:template_matching}
 \end{figure}
 
-In order to deduce the orientation of the marker in the plane transverse to the optical axis of the camera, the matching procedure is repeated iteratively with different rotational transformations applied to the master image. Rotational angle denotes as $\alpha$ and goes through some predefined range with some step fot each iteration. At the same time in each iteration, the minimal value of the metric is recorded with the minimal metric value across all iterations. The planar orientation of the sensor is estimated as $-\alpha$. In Figure \ref{fig:template_rotation} a schematic illustrating the determination of the orientation is shown. A graph of the resultant minimised metric values versus the size of the angular transformation applied to the master image is shown on the right image of the Figure \ref{fig:template_rotation}. The graph corresponds to a test extraction performed with images of a dummy sensor where the sensor in the master image had a planar orientation of $\approx$ 3.5 degrees. A clear minimum is observed at $\approx$ 3.5 demonstrating the method's validity. More precise determination of the sensor orientation can be achieved when factors such as ambient light conditions, image focus and marker design are further optimised. The best accuracy reached during tests was $\approx$ 0.025 degrees.
+In order to deduce the orientation of the marker in the plane transverse to the optical axis of the camera, the matching procedure is repeated iteratively with different rotational transformations applied to the master image. For each iteration, the minimal value of the metric is recorded with the minimal metric value across all iterations denoted as $\alpha$. The planar orientation of the sensor is estimated as $-\alpha$. In Figure \ref{fig:template_rotation} a schematic illustrating the determination of the orientation is shown. A graph of the resultant minimised metric values versus the size of the angular transformation applied to the master image is shown on the right image of the Figure \ref{fig:template_rotation}. The graph corresponds to a test extraction performed with images of a dummy sensor where the sensor in the master image had a planar orientation of $\approx$ 3.5 degrees. A clear minimum is observed at $\approx$ 3.5 demonstrating the method's validity. More precise determination of the sensor orientation can be achieved when factors such as ambient light conditions, image focus and marker design are further optimised. The best accuracy reached during tests was $\approx$ 0.025 degrees.
 
 \begin{figure}[ht]\centering
 \includegraphics[width=0.9\linewidth]{Data/Control_Software/Template_rotation.png}
@@ -122,19 +122,19 @@ In order to deduce the orientation of the marker in the plane transverse to the 
 \end{figure}
 
 \subsection{Location of other corners and extraction of final position and orientation.}
-The procedure described in step 2 is repeated at each sensor corner. The planar orientations determined at given corner are used to set the direction of movement needed for the motion stage to automatically travel to an adjacent corner. The final position and orientation of the sensor is determined by a $\chi^{2}$ fit to the four (x,z) points. The orientation determined from the fit is cross-checked with the estimations of the orientation at the corners which accuracy could be not far from $\chi^{2}$ deduced. If there is agreement between the fit and four corner orientations, the fit results are used.
+The procedure described in step 2 is repeated at each sensor corner. The planar orientations determined at given corner are used to set the direction of movement needed for the motion stage to automatically travel to an adjacent corner. The final position and orientation of the sensor is determined by a $\chi^{2}$ fit to the four (x,y) points. The orientation determined from the fit is cross-checked with the estimations of the orientation at the corners which accuracy could be not far from $\chi^{2}$ deduced. If there is agreement between the fit and four corner orientations, the fit results are used.
 
 Detailed Flow Chart of the pattern recognition is shown in the Appendix \ref{fig:uml_uml_pattern_recognition}.
 
 \section{Application functionality}
 
-The main window of the application has several buttons and check boxes on top of the window and a number of tabs including: Finder, Threshold, Assembly, Autofocus, Motion Manager and others.
+The main window of the PSAuto application has several buttons and check boxes on top of the window and a number of tabs including: Finder, Threshold, Assembly, Autofocus, Motion Manager and others.
 
 \begin{enumerate}
 
 \item \emph{Finder.} A simple tab the only purpose of each is to show the last acquired image of the camera. This tab also provide a possibility to save current image.
 
-\item \emph{Threshold.} The result of the Threshold operation highly depends on the ambient light thus each new test required threshold value calibration before starting it. This tab is specifically created to control the applying threshold value. It provides the possibility to configure this value and gives an immediate respond by applying Threshold operation on the last acquired image and showing the result under the grayscale original image. The screenshot of the Threshold tab is shown on the Figure \ref{fig:threshold_screenshot}.
+\item \emph{Threshold.} The result of the Thresholding operation highly depends on the ambient light thus each new test required threshold value calibration before starting it. This tab is specifically created to control the applying threshold value. It provides the possibility to configure this value and gives an immediate respond by applying Threshold operation on the last acquired image and showing the result under the grayscale original image on the left side of the tab. The screenshot of the Threshold tab is shown on the Figure \ref{fig:threshold_screenshot}.
 
 \begin{figure}[ht]\centering
 \includegraphics[width=0.7\linewidth]{Data/Control_Software/Threshold_screenshot.png}
@@ -160,12 +160,11 @@ On the right side of the tab there are a number of control tools (beginning from
 \item The last tool in this tab provides the possibility to conduct tests of the system. It consists of several forms for input test information and a button to start the test.
 \end{itemize}
 
-\item \emph{Auto focus.} Another nice tool of the application is autofocus. It place an essential role in the pattern recognition as soon as its accuracy directly depends on the quality of acquired image. There are two features provided by this tab: find the focus position of the camera and move to this position. To find the focus position of the camera it is required to set the step size along Z-axis and the number of steps. As smaller the step is, the more precise focus position will be identified. The idea of auto focus detection is similar to best theta detection in the pattern recognition. For each step position it saves the metric data representing the blur of the acquired image thus in the end the software can find the position with least blur on the image comparing saved metrics for each image.
+\item \emph{Auto focus.} Another nice tool of the application is autofocus. It place an essential role in the pattern recognition as soon as its accuracy directly depends on the quality of acquired image. There are two features provided by this tab: find the focus position of the camera and move to this position. To find the focus position of the camera it is required to set the step size along Z-axis and the number of steps. As smaller the step is, the more precise focus position will be identified. The idea of auto focus detection is similar to best $\alpha$ detection in the pattern recognition. For each step position it saves the metric data representing the blur of the acquired image thus in the end the software can find the position with least blur on the image comparing saved metrics for each image.
 
 This algorithm can also be used for another purpose. As soon as the camera is constantly fixed on the robotic arm, it is possible to make relative Z-axis distance measurement. For instance, that can be used for measuring the glue layer thickness of an assembled modules.
 
-\item \emph{Motion Manager.}
-This tab provides the control of the motion and rotation stages. Among its functionality are:
+\item \emph{Motion Manager.} This tab provides the control of the motion and rotation stages. Among its functionality are:
 
 \begin{itemize}
 \setlength\itemsep{-0.5em}
